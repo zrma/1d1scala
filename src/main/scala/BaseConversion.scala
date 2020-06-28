@@ -6,7 +6,11 @@ object BaseConversion {
   }
 
   @tailrec private def toBinary(num: BigInt, acc: String): String = {
-    if (num < 2) num.toString + acc
-    else toBinary(num / 2, (num mod 2).toString ++ acc)
+    if (num < 2) {
+      num.toString + acc
+    }
+    else {
+      toBinary(num / 2, (num mod 2).toString ++ acc)
+    }
   }
 }
