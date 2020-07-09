@@ -30,4 +30,16 @@ class Assertions extends AnyFunSuite {
       fail("Shouldn't be here")
     }
   }
+
+  test("assumption") {
+    val two = 2
+    val three = 3
+    assume(1 + 1 == two, "Wow!")
+    assume(1 + 1 == three, "Oh!!")
+  }
+
+  test("cancellation") {
+    cancel("I cancelled it deliberately")
+    fail("Shouldn't be here")
+  }
 }
