@@ -42,4 +42,16 @@ class Assertions extends AnyFunSuite {
     cancel("I cancelled it deliberately")
     fail("Shouldn't be here")
   }
+
+  test("failure messages and clues") {
+    assert("Hello".length == 5, "Message1")
+
+    assertResult(5, "Message2") { "Hello".length }
+
+    withClue("Message3") {
+      intercept[ArithmeticException] {
+        val res = 3 / 0
+      }
+    }
+  }
 }
