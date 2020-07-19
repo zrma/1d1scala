@@ -1,4 +1,5 @@
 import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.{BeMatcher, MatchResult}
 import org.scalatest.matchers.should.Matchers
 
 class Matcher extends AnyFlatSpec with Matchers {
@@ -61,5 +62,20 @@ class Matcher extends AnyFlatSpec with Matchers {
     new java.util.HashMap[Int, Int] shouldBe empty
     new { def isEmpty = true } shouldBe empty
     Array(1, 2, 3) should not be empty
+  }
+
+  it should "Custom BeMatchers" in {
+    class LowerCase extends BeMatcher[String] {
+      override def apply(left: String): MatchResult =
+        MatchResult(
+          left.forall(_.isLower),
+          left + " is lowercase",
+          left + "is not lowercase"
+        )
+    }
+
+    val lowercase = new LowerCase
+    "message" shouldBe lowercase
+    "Message" should not be lowercase
   }
 }
