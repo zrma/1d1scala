@@ -1,6 +1,6 @@
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.{BeMatcher, MatchResult}
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.matchers.{BeMatcher, MatchResult}
 
 class Matcher extends AnyFlatSpec with Matchers {
   val message = "Hello World"
@@ -77,5 +77,44 @@ class Matcher extends AnyFlatSpec with Matchers {
     val lowercase = new LowerCase
     "message" shouldBe lowercase
     "Message" should not be lowercase
+  }
+
+  it should "Matchers for containers" in {
+    List("Alice", "Bob") should contain("Bob")
+
+    import org.scalactic._ // Can provide a custom Equality[L] explicitly
+    import StringNormalizations._
+
+    (List("Hi", "Di", "Ho") should contain("ho"))(after being lowerCased)
+
+    List(1, 2, 3, 4, 5) should contain oneOf (5, 7, 9)
+    List(1, 2, 3, 4, 5) should contain noneOf (7, 8, 9)
+    Some(0) should contain noneOf (7, 8, 9)
+    (Array("Doe", "Ray", "Me") should contain oneOf ("X", "RAY", "BEAM"))(
+      after being lowerCased
+    )
+
+    List(1, 2, 2, 3, 3, 3) should contain inOrderOnly (1, 2, 3)
+    List(0, 1, 2, 2, 99, 3, 3, 3, 5) should contain inOrder (1, 2, 3)
+    List(1, 2, 3) should contain theSameElementsInOrderAs collection.mutable
+      .TreeSet(3, 2, 1)
+
+    List(1, 2, 3) shouldBe sorted
+
+    import org.scalatest.Inspectors._
+
+    val xs = List(1, 2, 3)
+    forAll(xs) { x =>
+      x should be < 10
+    }
+
+    all(xs) should be < 10
+
+    all(xs) should be > 0
+    atMost(2, xs) should be >= 4
+    atLeast(3, xs) should be < 5
+    between(2, 3, xs) should (be > 1 and be < 5)
+    exactly(2, xs) should be <= 2
+    every(xs) should be < 10
   }
 }
