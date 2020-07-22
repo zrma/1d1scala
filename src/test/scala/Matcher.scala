@@ -117,4 +117,33 @@ class Matcher extends AnyFlatSpec with Matchers {
     exactly(2, xs) should be <= 2
     every(xs) should be < 10
   }
+
+  it should "Combining Matchers with logical expressions" in {
+    val map = Map("one" -> 1, "two" -> 2, "three" -> 3, "ouch" -> 999)
+    val traversable = List(1, 2, 3, 4, 5, 6, 7)
+
+    map should (contain key ("two") and not contain value(7))
+    traversable should (contain(7) or (contain(8) and have size (9)))
+    map should (not be (null) and contain key ("ouch"))
+  }
+
+  it should "Matching options" in {
+    val map = Map("one" -> 1, "two" -> 2, "three" -> 3, "ouch" -> 999)
+
+    {
+      val option = map.get("four")
+
+      option shouldEqual None
+      option shouldBe None
+      option should ===(None)
+      option shouldBe empty
+    }
+
+    {
+      val option = map.get("three")
+
+      option shouldEqual Some(3)
+      option shouldBe defined
+    }
+  }
 }
